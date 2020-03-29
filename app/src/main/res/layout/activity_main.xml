@@ -6,9 +6,47 @@
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
     tools:context=".MainActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/appBarLayout_id"
+        >
+        <include layout="@layout/app_bar_layout"
+            android:id="@+id/main_page_toolbar_id">
+        </include>
 
-<include layout="@layout/app_bar_layout"
-    android:id="@+id/main_page_toolbar_id">
-</include>
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/main_tab_id"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            >
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monday" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tuesday" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wednesday" />
+        </com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/main_viewPager_id"
+        android:layout_below="@+id/appBarLayout_id"
+        >
+
+    </androidx.viewpager.widget.ViewPager>
 
 </RelativeLayout>

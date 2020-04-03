@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseUser cureentUser;
     FirebaseAuth mAuth;
-    ProgressDialog loadingBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

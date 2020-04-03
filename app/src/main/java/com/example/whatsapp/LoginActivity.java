@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    FirebaseUser cureentUser;
+
     Button loginBtn,phoneLoginByn;
     EditText userEmail,userPassword;
     TextView needNewAccount,forgetPassword;
@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth=FirebaseAuth.getInstance();
-        cureentUser=mAuth.getCurrentUser();
+
         InitializeFields();
         needNewAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,14 +64,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (cureentUser!=null)
-        {
-            sendUserToLoginActivity();
-        }
-    }
+
 
 
 
@@ -97,8 +90,10 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful())
                         {
-                            Intent neddNewAccountInten=new Intent(getApplicationContext(),MainActivity.class);
-                            startActivity(neddNewAccountInten);
+                            Intent mainActivityIntent=new Intent(getApplicationContext(),MainActivity.class);
+                            mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(mainActivityIntent);
+                            fileList();
                             Toast.makeText(getApplicationContext(),"Successfully login",Toast.LENGTH_LONG).show();
                             loadingBar.dismiss();
 

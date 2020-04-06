@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (item.getItemId()==R.id.settings_option_id)
         {
-
+            Intent loginIntent=new Intent(MainActivity.this,SettingsActivity.class);
+            startActivity(loginIntent);
         }
         return true;
     }

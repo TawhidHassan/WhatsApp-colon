@@ -10,10 +10,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseUser cureentUser;
     FirebaseAuth mAuth;
+    DatabaseReference rootRef;
 
 
     @Override
@@ -36,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth= FirebaseAuth.getInstance();
         cureentUser=mAuth.getCurrentUser();
+        rootRef= FirebaseDatabase.getInstance().getReference();
 
         viewPager=findViewById(R.id.main_viewPager_id);
         tabLayout=findViewById(R.id.main_tab_id);
@@ -55,14 +63,48 @@ public class MainActivity extends AppCompatActivity {
         if (cureentUser==null)
         {
             sendUserToLoginActivity();
+        }else
+        {
+            VerifyUserExistance();
         }
     }
 
     private void sendUserToLoginActivity() {
         Intent loginIntent=new Intent(MainActivity.this,LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
+        finish();
+    }
+    private void sendUserToSettingActivity() {
+        Intent settingIntent=new Intent(MainActivity.this,SettingsActivity.class);
+        settingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(settingIntent);
+        finish();
     }
 
+    private void VerifyUserExistance()
+    {
+        String currentUserId=mAuth.getCurrentUser().getUid();
+
+        rootRef.child("Users").child(currentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child("name").exists())
+                {
+                    Toast.makeText(getApplicationContext(),"wellcoem",Toast.LENGTH_LONG).show();
+                }else
+                {
+                    sendUserToSettingActivity();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                sendUserToSettingActivity();
+            }
+        });
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
          super.onCreateOptionsMenu(menu);
@@ -84,8 +126,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (item.getItemId()==R.id.settings_option_id)
         {
-            Intent loginIntent=new Intent(MainActivity.this,SettingsActivity.class);
-            startActivity(loginIntent);
+            sendUserToSettingActivity();
         }
         return true;
     }

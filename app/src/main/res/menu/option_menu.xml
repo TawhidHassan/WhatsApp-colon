@@ -4,6 +4,9 @@
         <item android:title="Find Friebd"
             android:id="@+id/main_find_friend_option_id"
             app:showAsAction="never"/>
+    <item android:title="Create group"
+            android:id="@+id/main_cretae_group_option_id"
+            app:showAsAction="never"/>
     <item android:title="Settings"
         android:id="@+id/settings_option_id"
         app:showAsAction="never"/>

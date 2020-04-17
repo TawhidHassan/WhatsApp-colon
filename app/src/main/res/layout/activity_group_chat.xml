@@ -47,17 +47,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:weightSum="3"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/input_group_message"
-            android:layout_width="360dp"
+            android:layout_width="wrap_content"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="@android:color/black"
+            android:hint="Enter your message"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="@drawable/inputs"
             android:padding="17dp" />
 
         <ImageButton
             android:id="@+id/send_message_button"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:src="@drawable/send" />

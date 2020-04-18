@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    tools:context=".PhoneLoginActivity">
+
+    <EditText
+        android:id="@+id/phoneTextId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Write phone number here"
+        android:textColorHint="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/inputs"
+        android:textColor="@color/colorPrimaryDark"
+        android:padding="14dp"
+        android:drawableLeft="@drawable/phone"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/serndVerifiCodeID"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Send Verification Code"
+        app:layout_constraintEnd_toEndOf="@+id/verifiTextId"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintStart_toStartOf="@+id/verifiTextId"
+        app:layout_constraintTop_toBottomOf="@+id/verifiTextId" />
+
+    <EditText
+        android:id="@+id/verifiTextId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:hint="Write Verifi code here"
+        android:textColorHint="@android:color/darker_gray"
+        android:background="@drawable/inputs"
+        android:textColor="@color/colorPrimaryDark"
+        android:padding="14dp"
+        android:drawableLeft="@drawable/password"
+        app:layout_constraintEnd_toEndOf="@+id/phoneTextId"
+        app:layout_constraintStart_toStartOf="@+id/phoneTextId"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/phoneTextId" />
+
+    <Button
+        android:id="@+id/verifiId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Verify"
+        app:layout_constraintEnd_toEndOf="@+id/serndVerifiCodeID"
+        app:layout_constraintStart_toStartOf="@+id/serndVerifiCodeID"
+        android:background="@color/colorPrimaryDark"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/serndVerifiCodeID" />
+</androidx.constraintlayout.widget.ConstraintLayout>

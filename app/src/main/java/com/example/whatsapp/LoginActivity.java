@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
 
 
-    Button loginBtn,phoneLoginByn;
+    Button loginBtn,phoneLoginBtn;
     EditText userEmail,userPassword;
     TextView needNewAccount,forgetPassword;
 
@@ -49,12 +49,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        phoneLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent phoneLoginActivity =new Intent(getApplicationContext(),PhoneLoginActivity.class);
+                startActivity(phoneLoginActivity);
+            }
+        });
+
     }
 
     private void InitializeFields()
     {
         loginBtn=findViewById(R.id.login_button_id);
-        phoneLoginByn=findViewById(R.id.login_with_phone_button_id);
+        phoneLoginBtn=findViewById(R.id.login_with_phone_button_id);
         userEmail=findViewById(R.id.loginEmailid);
         userPassword=findViewById(R.id.loginPasswordid);
         needNewAccount=findViewById(R.id.already_havenot_accout_id);

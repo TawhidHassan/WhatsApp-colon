@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -229,7 +229,12 @@ public class SettingsActivity extends AppCompatActivity {
 
                             userName.setText(retriveUserName);
                             userstatus.setText(retriveUserStatus);
-                            Picasso.get().load(retriveUserimages).placeholder(R.drawable.image).into(profileImage);
+
+                            Glide.with(SettingsActivity.this)
+                                    .load(retriveUserimages)
+                                    .centerCrop()
+                                    .placeholder(R.drawable.image)
+                                    .into(profileImage);
 
                         }else if((dataSnapshot.exists()) && (dataSnapshot.hasChild("name")))
                         {

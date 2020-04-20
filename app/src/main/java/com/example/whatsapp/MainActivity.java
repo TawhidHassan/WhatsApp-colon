@@ -84,9 +84,13 @@ public class MainActivity extends AppCompatActivity {
     }
     private void sendUserToSettingActivity() {
         Intent settingIntent=new Intent(MainActivity.this,SettingsActivity.class);
-        settingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(settingIntent);
-        finish();
+
+    }
+    private void sendUserToFindFriendActivity() {
+        Intent sendUserToFindFriendActivity=new Intent(MainActivity.this,FindFriendsActivity.class);
+        startActivity(sendUserToFindFriendActivity);
+
     }
 
     private void VerifyUserExistance()
@@ -129,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
          }
         if (item.getItemId()==R.id.main_find_friend_option_id)
         {
-
+            sendUserToFindFriendActivity();
         }
         if (item.getItemId()==R.id.settings_option_id)
         {

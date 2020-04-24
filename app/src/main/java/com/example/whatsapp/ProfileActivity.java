@@ -105,12 +105,22 @@ public class ProfileActivity extends AppCompatActivity {
                                 {
                                     Current_State = "request_sent";
                                     SendMessageRequestButton.setText("Cancel Chat Request");
-                                }else
+                                }else if (request_type.equals("received"))
                                 {
+                                    Current_State = "request_received";
+                                    SendMessageRequestButton.setText("Accept Chat Request");
 
+                                    DeclineMessageRequestButton.setVisibility(View.VISIBLE);
+                                    DeclineMessageRequestButton.setEnabled(true);
+
+                                    DeclineMessageRequestButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view)
+                                        {
+                                            CancelChatRequest();
+                                        }
+                                    });
                                 }
-
-
                             }
                         }
 

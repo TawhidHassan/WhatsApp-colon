@@ -1,6 +1,7 @@
 package com.example.whatsapp;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -87,6 +88,19 @@ public class ChatsFragment extends Fragment {
 
                                     holder.userName.setText(retName);
                                     holder.userStatus.setText("last seen:  ");
+
+                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view)
+                                        {
+                                            Intent chatIntent = new Intent(getContext(), CahtActivity.class);
+                                            chatIntent.putExtra("visit_user_id", usersIDs);
+                                            chatIntent.putExtra("visit_user_name", retName);
+                                            chatIntent.putExtra("visit_image", retImage[0]);
+                                            startActivity(chatIntent);
+                                        }
+                                    });
+
 
                                 }
                             }

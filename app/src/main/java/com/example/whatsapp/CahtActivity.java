@@ -20,13 +20,18 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -45,9 +50,9 @@ public class CahtActivity extends AppCompatActivity {
      ImageButton SendMessageButton, SendFilesButton;
      EditText MessageInputText;
 
-//     final List<Messages> messagesList = new ArrayList<>();
+     final List<Messages> messagesList = new ArrayList<>();
      LinearLayoutManager linearLayoutManager;
-//     MessageAdapter messageAdapter;
+     MessageAdapter messageAdapter;
      RecyclerView userMessagesList;
 
      String saveCurrentDate;
@@ -101,6 +106,12 @@ public class CahtActivity extends AppCompatActivity {
         SendFilesButton = (ImageButton) findViewById(R.id.send_files_btn);
         MessageInputText = (EditText) findViewById(R.id.input_message);
 
+        messageAdapter = new MessageAdapter(messagesList);
+        userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
+        linearLayoutManager = new LinearLayoutManager(this);
+        userMessagesList.setLayoutManager(linearLayoutManager);
+        userMessagesList.setAdapter(messageAdapter);
+
 
         Calendar calendar = Calendar.getInstance();
 
@@ -110,6 +121,48 @@ public class CahtActivity extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
         saveCurrentTime = currentTime.format(calendar.getTime());
 
+    }
+
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        RootRef.child("Messages").child(messageSenderID).child(messageReceiverID)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s)
+                    {
+                        Messages messages = dataSnapshot.getValue(Messages.class);
+
+                        messagesList.add(messages);
+
+                        messageAdapter.notifyDataSetChanged();
+
+                        userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private void SendMessage()

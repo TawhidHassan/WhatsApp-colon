@@ -23,6 +23,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +39,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
 
     private String mVerificationId;
+    private DatabaseReference UsersRef;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
 
 
@@ -48,6 +52,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
 
         InputUserPhoneNumber = (EditText) findViewById(R.id.phoneTextId);
@@ -160,9 +165,23 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful())
                         {
-                            loadingBar.dismiss();
-                            Toast.makeText(PhoneLoginActivity.this, "Congratulations, you're logged in Successfully.", Toast.LENGTH_SHORT).show();
-                            SendUserToMainActivity();
+                            String currentUserId = mAuth.getCurrentUser().getUid();
+                            String deviceToken = FirebaseInstanceId.getInstance().getToken();
+
+                            UsersRef.child(currentUserId).child("device_token")
+                                    .setValue(deviceToken)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                loadingBar.dismiss();
+                                                Toast.makeText(PhoneLoginActivity.this, "Congratulations, you're logged in Successfully.", Toast.LENGTH_SHORT).show();
+                                                SendUserToMainActivity();
+                                            }
+
+                                        }
+                                    });
+
                         }
                         else
                         {

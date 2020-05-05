@@ -19,6 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -29,12 +30,15 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     ProgressDialog loadingBar;
     DatabaseReference rootReference;
+    private DatabaseReference UsersRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
         mAuth=FirebaseAuth.getInstance();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         InitializeFields();
 
         rootReference= FirebaseDatabase.getInstance().getReference();
@@ -90,15 +94,30 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful())
                             {
+
+                                String deviceToken = FirebaseInstanceId.getInstance().getToken();
+
                                 String curentuserId=mAuth.getCurrentUser().getUid();
                                 rootReference.child("Users").child(curentuserId).setValue("");
 
-                                Toast.makeText(getApplicationContext(),"create account",Toast.LENGTH_LONG).show();
-                                loadingBar.dismiss();
-                                Intent mainActivityIntent=new Intent(getApplicationContext(),MainActivity.class);
-                                mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(mainActivityIntent);
-                                fileList();
+                                rootReference.child(curentuserId).child("device_token")
+                                        .setValue(deviceToken)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful())
+                                                    {
+                                                        Toast.makeText(getApplicationContext(),"create account",Toast.LENGTH_LONG).show();
+                                                        loadingBar.dismiss();
+                                                        Intent mainActivityIntent=new Intent(getApplicationContext(),MainActivity.class);
+                                                        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        startActivity(mainActivityIntent);
+                                                        fileList();
+                                                    }
+                                            }
+                                        });
+
+
                             }else {
                                 String message=task.getException().toString();
                                 Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();

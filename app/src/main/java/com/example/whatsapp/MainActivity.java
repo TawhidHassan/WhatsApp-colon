@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     TabsAccessAdapter tabsAccessAdapter;
 
-    FirebaseUser cureentUser;
+
     private String currentUserID;
     FirebaseAuth mAuth;
     DatabaseReference rootRef;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Whats App");
 
         mAuth= FirebaseAuth.getInstance();
-        cureentUser=mAuth.getCurrentUser();
+
         currentUserID = mAuth.getCurrentUser().getUid();
         rootRef= FirebaseDatabase.getInstance().getReference();
 
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+       FirebaseUser cureentUser=mAuth.getCurrentUser();
         if (cureentUser==null)
         {
             sendUserToLoginActivity();
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
+        FirebaseUser cureentUser=mAuth.getCurrentUser();
         if (cureentUser != null)
         {
             updateUserStatus("offline");
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy()
     {
         super.onDestroy();
+        FirebaseUser cureentUser=mAuth.getCurrentUser();
 
         if (cureentUser != null)
         {
@@ -156,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
          super.onOptionsItemSelected(item);
          if (item.getItemId()==R.id.logOut_option_id)
          {
+             updateUserStatus("offline");
                 mAuth.signOut();
              sendUserToLoginActivity();
          }

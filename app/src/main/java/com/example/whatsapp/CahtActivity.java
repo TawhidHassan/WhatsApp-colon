@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -34,8 +35,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -130,10 +133,18 @@ public class CahtActivity extends AppCompatActivity {
                         if(which==1)
                         {
                             checker="pdf";
+                            Intent intent=new Intent();
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            intent.setType("application/pdf*");
+                            startActivityForResult(intent,438);
                         }
                         if(which==2)
                         {
                             checker="docx";
+                            Intent intent=new Intent();
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            intent.setType("application/msword*");
+                            startActivityForResult(intent,438);
                         }
                     }
                 });
@@ -156,6 +167,56 @@ public class CahtActivity extends AppCompatActivity {
             fileUri=data.getData();
             if (!checker.equals("image"))
             {
+                StorageReference storageReference= FirebaseStorage.getInstance().getReference().child("Document Files");
+
+                final String messageSenderRef = "Messages/" + messageSenderID + "/" + messageReceiverID;
+                final String messageReceiverRef = "Messages/" + messageReceiverID + "/" + messageSenderID;
+
+                DatabaseReference userMessageKeyRef = RootRef.child("Messages")
+                        .child(messageSenderID).child(messageReceiverID).push();
+
+                final String messagePushID = userMessageKeyRef.getKey();
+
+                final StorageReference filepath=storageReference.child(messagePushID+"."+checker);
+
+                uploadtask=filepath.putFile(fileUri);
+
+                uploadtask.continueWithTask(new Continuation() {
+                    @Override
+                    public Object then(@NonNull Task task) throws Exception {
+                        if (!task.isSuccessful())
+                        {
+                            throw  task.getException();
+                        }
+                        return filepath.getDownloadUrl();
+
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+
+                        Uri dwonloadUrl=  task.getResult();
+                        myUrl=dwonloadUrl.toString();
+
+                        Map messageTextBody = new HashMap();
+                        messageTextBody.put("message", myUrl);
+                        messageTextBody.put("name", fileUri.getLastPathSegment());
+                        messageTextBody.put("type", checker);
+                        messageTextBody.put("type", checker);
+                        messageTextBody.put("from", messageSenderID);
+                        messageTextBody.put("to", messageReceiverID);
+                        messageTextBody.put("messageID", messagePushID);
+                        messageTextBody.put("time", saveCurrentTime);
+                        messageTextBody.put("date", saveCurrentDate);
+
+                        Map messageBodyDetails = new HashMap();
+                        messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                        messageBodyDetails.put( messageReceiverRef + "/" + messagePushID, messageTextBody);
+
+                        RootRef.updateChildren(messageBodyDetails);
+                        loadingBar.dismiss();
+                    }
+                });
 
             }
             else if (checker.equals("image"))
@@ -233,6 +294,7 @@ public class CahtActivity extends AppCompatActivity {
                 Toast.makeText(this, "Noting selected, Error.", Toast.LENGTH_SHORT).show();
             }
         }
+
 
 
     }
